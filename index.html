@@ -1,123 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Frete - Registro Módico</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 30px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
-        }
-        .campo {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .resultado {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f0f8ff;
-            border-left: 5px solid #007bff;
-        }
-        .resultado label {
-            margin-bottom: 2px;
-        }
-        .resultado input {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #2c3e50;
-            background-color: #e9ecef;
-            border: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Frete Modico</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .campo {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f8ff;
+      border-left: 5px solid #007bff;
+      border-radius: 4px;
+    }
+
+    .resultado.erro {
+      background-color: #fff0f0;
+      border-left-color: #dc3545;
+    }
+
+    .resultado input {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2c3e50;
+      background-color: #e9ecef;
+      border: none;
+    }
+
+    .resultado.erro input {
+      color: #dc3545;
+    }
+  </style>
 </head>
-<body onload="calcularFrete()">
+<body>
 
-    <h2>Cálculo de Frete Módico</h2>
+  <h2>Calculadora de Frete Modico</h2>
 
-    <div class="campo">
-        <label for="pesoLivro">Peso do livro (g):</label>
-        <input type="number" id="pesoLivro" placeholder="Ex: 500" oninput="calcularFrete()">
-    </div>
+  <div class="campo">
+    <label for="pesoLivro">Peso do livro (g):</label>
+    <input type="number" id="pesoLivro" placeholder="Ex: 500" min="0">
+  </div>
 
-    <div class="campo">
-        <label for="pesoEmbalagem">Peso da embalagem (g):</label>
-        <input type="number" id="pesoEmbalagem" value="20" oninput="calcularFrete()">
-    </div>
+  <div class="campo">
+    <label for="pesoEmbalagem">Peso da embalagem (g):</label>
+    <input type="number" id="pesoEmbalagem" value="20" min="0">
+  </div>
 
-    <div class="campo resultado">
-        <label for="valorTotal">Valor total do frete:</label>
-        <input type="text" id="valorTotal" readonly value="R$ 0,00">
-    </div>
+  <div class="campo resultado" id="resultado">
+    <label for="valorTotal">Valor total do frete:</label>
+    <input type="text" id="valorTotal" readonly value="R$ 0,00">
+  </div>
 
-    <script>
-        function obterPrecoImpressoNormal(peso) {
-            if (peso <= 0) return 0;
-            if (peso <= 20) return 1.80;
-            if (peso <= 50) return 2.60;
-            if (peso <= 100) return 3.40;
-            if (peso <= 150) return 4.15;
-            if (peso <= 200) return 4.95;
-            if (peso <= 250) return 5.65;
-            if (peso <= 300) return 6.50;
-            if (peso <= 350) return 7.20;
-            if (peso <= 400) return 8.05;
-            if (peso <= 450) return 8.85;
-            if (peso <= 500) return 9.65;
-            if (peso <= 550) return 10.20;
-            if (peso <= 600) return 11.00;
-            if (peso <= 650) return 11.65;
-            if (peso <= 700) return 12.25;
-            if (peso <= 750) return 12.85;
-            if (peso <= 800) return 13.55;
-            if (peso <= 850) return 14.25;
-            if (peso <= 900) return 15.10;
-            if (peso <= 950) return 15.75;
-            if (peso <= 1000) return 16.35;
+  <script>
+    const PESO_MAXIMO = 2000;
+    const TAXA_REGISTRO_MODICO = 4.05;
 
-            var pesoExcedente = peso - 1000;
-            var fracoesAdicionais = Math.ceil(pesoExcedente / 1000);
-            return 16.35 + (fracoesAdicionais * 6.60);
-        }
+    // Tabela de preços de Impresso Normal [pesoMaximo, preco]
+    const TABELA_PRECOS = [
+      [20, 1.80],   [50, 2.60],   [100, 3.40],  [150, 4.15],
+      [200, 4.95],  [250, 5.65],  [300, 6.50],  [350, 7.20],
+      [400, 8.05],  [450, 8.85],  [500, 9.65],  [550, 10.20],
+      [600, 11.00], [650, 11.65], [700, 12.25], [750, 12.85],
+      [800, 13.55], [850, 14.25], [900, 15.10], [950, 15.75],
+      [1000, 16.35]
+    ];
 
-        function calcularFrete() {
-            var campoLivro = document.getElementById('pesoLivro').value;
-            var campoEmbalagem = document.getElementById('pesoEmbalagem').value;
+    const inputLivro = document.getElementById('pesoLivro');
+    const inputEmbalagem = document.getElementById('pesoEmbalagem');
+    const inputValorTotal = document.getElementById('valorTotal');
+    const containerResultado = document.getElementById('resultado');
 
-            if (campoLivro === "" || parseFloat(campoLivro) <= 0) {
-                document.getElementById('valorTotal').value = "R$ 0,00";
-                return;
-            }
+    function formatarMoeda(valor) {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+    }
 
-            var pesoLivro = parseFloat(campoLivro) || 0;
-            var pesoEmbalagem = parseFloat(campoEmbalagem) || 0;
-            
-            var pesoTotal = pesoLivro + pesoEmbalagem;
+    function obterPrecoImpressoNormal(peso) {
+      if (peso <= 0) return 0;
 
-            var custoImpresso = obterPrecoImpressoNormal(pesoTotal);
-            var taxaRegistroModico = 4.05;
-            
-            var valorFinal = custoImpresso + taxaRegistroModico;
+      const faixa = TABELA_PRECOS.find(([limite]) => peso <= limite);
+      if (faixa) return faixa[1];
 
-            document.getElementById('valorTotal').value = "R$ " + valorFinal.toFixed(2).replace('.', ',');
-        }
-    </script>
+      const pesoExcedente = peso - 1000;
+      const fracoesAdicionais = Math.ceil(pesoExcedente / 1000);
+      return 16.35 + (fracoesAdicionais * 6.60);
+    }
 
+    function calcularFrete() {
+      const pesoLivro = parseFloat(inputLivro.value) || 0;
+      const pesoEmbalagem = parseFloat(inputEmbalagem.value) || 0;
+
+      if (pesoLivro <= 0) {
+        inputValorTotal.value = formatarMoeda(0);
+        containerResultado.classList.remove('erro');
+        return;
+      }
+
+      const pesoTotal = pesoLivro + pesoEmbalagem;
+
+      if (pesoTotal > PESO_MAXIMO) {
+        inputValorTotal.value = "ERRO: limite de 2kg excedido";
+        containerResultado.classList.add('erro');
+        return;
+      }
+
+      containerResultado.classList.remove('erro');
+
+      const custoImpresso = obterPrecoImpressoNormal(pesoTotal);
+      const valorFinal = custoImpresso + TAXA_REGISTRO_MODICO;
+
+      inputValorTotal.value = formatarMoeda(valorFinal);
+    }
+
+    // Event Listeners
+    inputLivro.addEventListener('input', calcularFrete);
+    inputEmbalagem.addEventListener('input', calcularFrete);
+
+    // Executa ao carregar a página
+    document.addEventListener('DOMContentLoaded', calcularFrete);
+  </script>
 </body>
 </html>
