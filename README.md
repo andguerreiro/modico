@@ -4,4 +4,4 @@ Baseado em uma tabela de precos obtida de uma agencia ([ver foto](https://github
 
 Precos validos a partir de 12/abr/2026.
 
-Acesse via: [bit.ly/modico](bit.ly/modico)
+Acesse via: [bit.ly/modico](https://bit.ly/modico)
