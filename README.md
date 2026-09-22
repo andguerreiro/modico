@@ -6,7 +6,7 @@ Precos validos a partir de 12/abr/2026.
 
 Acesse via: [bit.ly/modico](https://bit.ly/modico)
 
-Outras opcoes:
+Outras opcoes de frete:
 
+- SuperFrete: [https://web.superfrete.com/](https://web.superfrete.com/)
 - Melhor Envio: [https://app.melhorenvio.com.br/calculadora](https://app.melhorenvio.com.br/calculadora)
-- SuperFrere: [https://web.superfrete.com/](https://web.superfrete.com/)
