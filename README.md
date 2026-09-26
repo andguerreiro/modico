@@ -1,5 +1,7 @@
 Calculadora de frete para Impresso Normal com Registro Modico dos Correios.
 
+Logo criado por lutfix e baixado de flaticon.com
+
 Baseado em uma tabela de precos obtida de uma agencia ([ver foto](https://github.com/andguerreiro/modico/blob/main/IMG_20260921_103115.jpg)).
 
 Precos validos a partir de 12/abr/2026.
