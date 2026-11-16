@@ -6,7 +6,7 @@ Baseado em uma tabela de preços obtida de uma agência ([ver foto](https://gith
 
 Preços válidos a partir de 12/abr/2026.
 
-Acesse via: [andguerreiro.github.io/modico/](https://andguerreiro.github.io/modico/)
+Acesse via: [modico.pages.dev](https://modico.pages.dev/)
 
 Outras opções de frete:
 
